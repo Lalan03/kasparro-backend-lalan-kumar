@@ -1,7 +1,9 @@
+# api/main.py
+
 import logging
 from fastapi import FastAPI
 from api.routes import router, metrics_router
-from core.database import init_engine, SessionLocal
+from core.database import init_engine, get_engine, get_session
 from core.models import Base
 from ingestion.etl_runner import run_etl
 
@@ -13,7 +15,7 @@ app = FastAPI(
 )
 
 # -------------------------------------------------
-# ROOT (REQUIRED BY RAILWAY)
+# ROOT (REQUIRED FOR RAILWAY)
 # -------------------------------------------------
 @app.get("/")
 def root():
@@ -29,14 +31,16 @@ def root():
 # -------------------------------------------------
 @app.on_event("startup")
 def startup():
-    # 1. Init DB engine safely
+    # 1. Initialize DB
     init_engine()
 
-    # 2. Create tables AFTER DB is reachable
-    from core.database import engine
+    engine = get_engine()
+    SessionLocal = get_session()
+
+    # 2. Create tables AFTER DB is ready
     Base.metadata.create_all(bind=engine)
 
-    # 3. Run ETL (non-blocking)
+    # 3. Run ETL safely
     db = SessionLocal()
     try:
         run_etl(db)
