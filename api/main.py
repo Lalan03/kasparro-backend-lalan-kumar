@@ -14,8 +14,26 @@ logging.basicConfig(level=logging.INFO)
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Kasparro ETL")
 
+app = FastAPI(
+    title="Kasparro ETL Backend",
+    version="1.0.0"
+)
+
+# -------------------------------------------------
+# ROOT ENDPOINT (REQUIRED FOR RAILWAY)
+# -------------------------------------------------
+@app.get("/")
+def root():
+    return {
+        "service": "Kasparro ETL Backend",
+        "status": "running",
+        "docs": "/docs"
+    }
+
+# -------------------------------------------------
+# STARTUP ETL (NON-BLOCKING)
+# -------------------------------------------------
 @app.on_event("startup")
 def startup_etl():
     db = SessionLocal()
@@ -24,21 +42,18 @@ def startup_etl():
         logging.info("ETL completed successfully on startup")
     except Exception as e:
         logging.error(f"ETL failed on startup: {e}")
-        # IMPORTANT: do NOT crash API
     finally:
         db.close()
 
-
+# -------------------------------------------------
+# ROUTES
+# -------------------------------------------------
 app.include_router(router)
 app.include_router(metrics_router)
 
 
-@app.get("/")
-def root():
-    return {
-        "service": "Kasparro ETL Backend",
-        "status": "running",
-        "docs": "/docs",
-        "health": "/health",
-        "metrics": "/metrics"
-    }
+
+
+
+
+
