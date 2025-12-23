@@ -89,3 +89,8 @@ def stats(db: Session = Depends(get_db)):
         "last_success": last_success.created_at if last_success else None,
         "last_failure": last_failure.created_at if last_failure else None,
     }
+
+
+    @app.get("/favicon.ico")
+    def favicon():
+        return {}

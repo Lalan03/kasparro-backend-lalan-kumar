@@ -31,3 +31,14 @@ def startup_etl():
 
 app.include_router(router)
 app.include_router(metrics_router)
+
+
+@app.get("/")
+def root():
+    return {
+        "service": "Kasparro ETL Backend",
+        "status": "running",
+        "docs": "/docs",
+        "health": "/health",
+        "metrics": "/metrics"
+    }
