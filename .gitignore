@@ -6,3 +6,6 @@ __pycache__/
 .idea/
 .vscode/
 data/*.csv
+# Allow sample CSV for ETL
+!data/
+!data/sample.csv
