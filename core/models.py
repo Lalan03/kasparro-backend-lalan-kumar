@@ -85,3 +85,6 @@ class ETLRun(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     completed_at = Column(DateTime, default=datetime.utcnow)
 
+
+
+
