@@ -22,7 +22,10 @@ def fetch_api_data(db: Session):
     checkpoint = db.query(ETLCheckpoint).filter_by(source="api").first()
     last_offset = checkpoint.last_offset if checkpoint else None
 
-    items = retry_with_backoff(_fetch)
+    try:
+        items = retry_with_backoff(_fetch)
+    except Exception:
+        return []
 
     # RAW SAVE
     db.add(RawAPIData(payload=items))

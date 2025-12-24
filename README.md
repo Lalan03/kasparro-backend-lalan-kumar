@@ -180,7 +180,7 @@ def normalize_name(name: str) -> str:
 ### Data API (Authentication Required)
 - `GET /data`
 - `Headers:`
-`  x-api-key: `<API_KEY>
+`  x-api-key: abc`
 `Query Params:`
 `  limit, offset, source`
 
