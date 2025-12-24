@@ -91,6 +91,3 @@ def stats(db: Session = Depends(get_db)):
     }
 
 
-    @app.get("/favicon.ico")
-    def favicon():
-        return {}

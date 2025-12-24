@@ -34,6 +34,10 @@ def startup():
     finally:
         db.close()
 
+@app.get("/favicon.ico")
+def favicon():
+    return {}
+
 
 @app.get("/")
 def root():

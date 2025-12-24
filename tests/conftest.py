@@ -1,20 +1,15 @@
-#teste/conftest.py
-
-import pytest
-from fastapi.testclient import TestClient
-from api.main import app
-from core.database import SessionLocal, Base, engine
-
+from core.database import init_engine, get_engine, get_sessionmaker
+from core.models import Base
 
 @pytest.fixture(scope="function")
 def db():
+    init_engine()
+    engine = get_engine()
     Base.metadata.create_all(bind=engine)
+
+    SessionLocal = get_sessionmaker()
     session = SessionLocal()
     yield session
+
     session.close()
     Base.metadata.drop_all(bind=engine)
-
-
-@pytest.fixture
-def client():
-    return TestClient(app)

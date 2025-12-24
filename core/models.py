@@ -62,15 +62,14 @@ class UnifiedData(Base):
     __tablename__ = "unified_data"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False)      # canonical identity
     value = Column(Float, nullable=False)
-    source = Column(String, nullable=False)
+    source = Column(String, nullable=False)    # metadata only
     ingested_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
-        UniqueConstraint("name", "source", name="uq_name_source"),
+        UniqueConstraint("name", name="uq_name"),
     )
-
 
 # =====================================================
 # ETL AUDIT / STATS (P1 REQUIREMENT)
