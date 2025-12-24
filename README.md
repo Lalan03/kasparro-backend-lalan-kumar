@@ -81,46 +81,6 @@ Consumers / Monitoring / Metrics
 └── README.md
 
 
-
-
-.
-├── api/
-│ ├── main.py # FastAPI app & startup ETL
-│ ├── routes.py # API endpoints
-│ └── dependencies/
-│ └── auth.py # API key authentication
-│
-├── core/
-│ ├── config.py # Environment configuration
-│ ├── database.py # DB engine & session management
-│ └── models.py # SQLAlchemy models
-│
-├── ingestion/
-│ ├── api_source.py # Public API ingestion
-│ ├── csv_source.py # CSV ingestion
-│ ├── third_source.py # Third source ingestion
-│ └── etl_runner.py # ETL orchestration
-│
-├── schemas/
-│ └── unified.py # Pydantic schemas
-│
-├── services/
-│ ├── metrics.py # Prometheus metrics
-│ ├── rate_limiter.py # Rate limiting & retries
-│ └── schema_drift.py # Schema drift detection
-│
-├── tests/
-│ ├── test_api.py
-│ └── test_etl.py
-│
-├── data/
-│ ├── sample.csv
-│ └── third_source.json
-│
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
 ## 3. Features
 
 ### ETL Capabilities
