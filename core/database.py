@@ -23,19 +23,26 @@ def init_engine():
 
 
 def get_engine():
+    if _engine is None:
+        raise RuntimeError("Engine not initialized")
     return _engine
 
 
-def get_session():
+def get_sessionmaker():
     if _SessionLocal is None:
-        raise RuntimeError("Database not initialized. Call init_engine() first.")
+        raise RuntimeError("SessionLocal not initialized")
     return _SessionLocal
 
 
 def get_db():
-    SessionLocal = get_session()
+    SessionLocal = get_sessionmaker()
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+
+def init_db():
+    engine = get_engine()
+    Base.metadata.create_all(bind=engine)

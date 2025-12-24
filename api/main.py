@@ -2,45 +2,29 @@
 
 import logging
 from fastapi import FastAPI
-from api.routes import router, metrics_router
-from core.database import init_engine, get_engine, get_session
+
+from core.database import init_engine, get_engine
 from core.models import Base
+from api.routes import router, metrics_router
 from ingestion.etl_runner import run_etl
+from core.database import get_sessionmaker
 
 logging.basicConfig(level=logging.INFO)
 
-app = FastAPI(
-    title="Kasparro ETL Backend",
-    version="1.0.0",
-)
-
-# -------------------------------------------------
-# ROOT (REQUIRED FOR RAILWAY)
-# -------------------------------------------------
-@app.get("/")
-def root():
-    return {
-        "service": "Kasparro ETL Backend",
-        "status": "running",
-        "docs": "/docs",
-    }
+app = FastAPI(title="Kasparro ETL")
 
 
-# -------------------------------------------------
-# STARTUP
-# -------------------------------------------------
 @app.on_event("startup")
 def startup():
-    # 1. Initialize DB
+    # 1️⃣ Initialize DB engine
     init_engine()
 
+    # 2️⃣ Create tables
     engine = get_engine()
-    SessionLocal = get_session()
-
-    # 2. Create tables AFTER DB is ready
     Base.metadata.create_all(bind=engine)
 
-    # 3. Run ETL safely
+    # 3️⃣ Run ETL safely
+    SessionLocal = get_sessionmaker()
     db = SessionLocal()
     try:
         run_etl(db)
@@ -51,8 +35,11 @@ def startup():
         db.close()
 
 
-# -------------------------------------------------
-# ROUTES
-# -------------------------------------------------
+@app.get("/")
+def root():
+    return {"status": "running"}
+
+
+
 app.include_router(router)
 app.include_router(metrics_router)

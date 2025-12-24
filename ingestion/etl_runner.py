@@ -16,6 +16,15 @@ from services.metrics import (
 )
 
 
+# ---------------- NORMALIZATION ----------------
+def normalize_name(name: str) -> str:
+    """
+    Canonical normalization for entity identity.
+    Required by assignment to unify data across sources.
+    """
+    return name.strip().lower()
+
+
 def run_etl(db: Session):
     start = time.time()
     ETL_RUNS.inc()
@@ -55,7 +64,7 @@ def run_etl(db: Session):
                     source="csv",
                 )
             )
-        # IMPORTANT: no new rows ≠ failure
+        # no new rows ≠ failure
         source_results["csv"] = True
     except Exception as e:
         print(f"CSV source failed: {e}")
@@ -76,22 +85,30 @@ def run_etl(db: Session):
     except Exception as e:
         print(f"Third source failed: {e}")
 
-    # ---------------- DEDUP ----------------
-    unique = {(r.name, r.source): r for r in records}
-    records = list(unique.values())
+    # ---------------- NORMALIZED DEDUP ----------------
+    normalized_records = {}
+    for r in records:
+        key = normalize_name(r.name)
+        if key not in normalized_records:
+            normalized_records[key] = r
+
+    records = list(normalized_records.values())
 
     # ---------------- WRITE ----------------
     inserted = 0
     for r in records:
+        canonical_name = normalize_name(r.name)
+
         exists = (
             db.query(UnifiedData)
-            .filter_by(name=r.name, source=r.source)
+            .filter_by(name=canonical_name)
             .first()
         )
+
         if not exists:
             db.add(
                 UnifiedData(
-                    name=r.name,
+                    name=canonical_name,
                     value=r.value,
                     source=r.source,
                 )
@@ -111,7 +128,7 @@ def run_etl(db: Session):
     else:
         status = "partial"
 
-    # ---------------- ETL RUN ----------------
+    # ---------------- ETL RUN AUDIT ----------------
     etl_run = ETLRun(
         status=status,
         records_processed=inserted,
