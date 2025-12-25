@@ -143,9 +143,6 @@ Consumers / Monitoring / Metrics
 - `etl_checkpoint`
 - `etl_runs`
 
-### Unified Table
-- `etl_checkpoint`
-- `etl_runs`
 #### These tables support:
 - `Incremental ingestion`
 - `Auditing`
@@ -237,8 +234,7 @@ Live Deployment (Railway-->Verifiable)
 - The application is deployed using Docker on Railway and backed by Railway PostgreSQL.
 
 #### Deployment Method
-- Docker-based deployment using `Dockerfile`
-- Docker-based deployment using Dockerfile:
+- Docker-based deployment using `Dockerfile`:
 `uvicorn api.main:app --host 0.0.0.0 --port $PORT`
 
 ### Deployment Proof
