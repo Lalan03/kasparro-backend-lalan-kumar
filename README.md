@@ -78,6 +78,19 @@ Consumers / Monitoring / Metrics
 ├── docker-compose.yml
 ├── Dockerfile
 ├── requirements.txt
+├── docs/
+|    ├── deployment_proof1.png  → Railway dashboard (Running)
+|    ├── deployment_proof2.png
+|    ├── deployment_proof3.png
+|    ├── deployment_proof4.png
+|    ├── deployment_proof5.png  → /health or /metrics = 200
+|    ├── deployment_proof6.png
+|    ├── deployment_proof7.png
+|    ├── deployment_proof8.png  → Public URL visible
+|    ├── deployment_proof9.png
+|    └── deployment_proof10.png
+|
+│  
 └── README.md
 
 
@@ -227,6 +240,26 @@ Live Deployment (Railway-->Verifiable)
 - Docker-based deployment using `Dockerfile`
 - Docker-based deployment using Dockerfile:
 `uvicorn api.main:app --host 0.0.0.0 --port $PORT`
+
+### Deployment Proof
+
+The application is deployed and running on Railway in production.
+
+Below screenshots verify:
+
+- Railway service status (Running)
+- Public deployment URL
+- Live API endpoint responses
+
+#### Railway Dashboard & Service Status
+![Railway Running](docs/deployment_proof1.png)
+
+#### Public Deployment URL
+![Public URL](docs/deployment_proof8.png)
+
+#### Live Health Endpoint
+![Health Endpoint](docs/deployment_proof5.png)
+
 
 #### Infrastructure
 - FastAPI hosted on Railway
