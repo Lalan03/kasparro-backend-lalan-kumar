@@ -158,8 +158,8 @@ Consumers / Monitoring / Metrics
 
 ## 5. Canonical Normalization Strategy
 - All incoming records are normalized before insertion:
-def normalize_name(name: str) -> str:
-    return name.strip().lower()
+- `def normalize_name(name: str) -> str:`
+    `return name.strip().lower()`
 
 ## 6. API Endpoints
 ### Root
@@ -209,9 +209,24 @@ def normalize_name(name: str) -> str:
 
 
 ## 8. Deployment
-Live Deployment (Railway)
-#### URL: 
+Live Deployment (Railway-->Verifiable)
+#### Public URL: 
 - `https://kasparro-backend-lalan-kumar-production.up.railway.app`
+#### Verified Endpoints
+
+| Endpoint   | Status                   |
+| ---------- | ------------------------ |
+| `/`        | ✅ 200                    |
+| `/health`  | ✅ 200                    |
+| `/metrics` | ✅ 200                    |
+| `/data`    | ✅ 200 (API key required) |
+
+- The application is deployed using Docker on Railway and backed by Railway PostgreSQL.
+
+#### Deployment Method
+- Docker-based deployment using `Dockerfile`
+- Docker-based deployment using Dockerfile:
+`uvicorn api.main:app --host 0.0.0.0 --port $PORT`
 
 #### Infrastructure
 - FastAPI hosted on Railway
@@ -234,7 +249,9 @@ Live Deployment (Railway)
 ## 10. Environment Variables
 ### Create a .env file:
 - `DATABASE_URL=postgresql://user:password@host:port/dbname`
-- `API_KEY=your-secret-key`
+- `API_KEY=abc`
+- `ENV=production`
+- `DEBUG=false`
 
 ## 11. Running the Project
 ### ▶️ Local (Python)
